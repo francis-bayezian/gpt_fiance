@@ -11,6 +11,9 @@ import openai
 import time
 import tiktoken
 from openai import OpenAI
+import sys
+import site
+os.environ["PYTHONPATH"] = os.path.pathsep.join(site.getsitepackages())
 
 
 ###############################################################################################################
