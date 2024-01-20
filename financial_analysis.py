@@ -108,36 +108,37 @@ if data_file is not None:
 
 # Check if a file has been uploaded
 if data_file is not None:
-    data = pd.read_parquet(data_file)
-    df_reset = data.reset_index()
-    change_index = df_reset['symbol'].ne(df_reset['symbol'].shift())
-    df_reset['symbol'] = df_reset['symbol'].ffill()
-    data_columns = df_reset.columns
-    statement = "These are the columns of my dataset:"
-    final_text = "\n".join([statement] + list(data_columns))
+    with st.spinner("Analyzing data..."):
+        data = pd.read_parquet(data_file)
+        df_reset = data.reset_index()
+        change_index = df_reset['symbol'].ne(df_reset['symbol'].shift())
+        df_reset['symbol'] = df_reset['symbol'].ffill()
+        data_columns = df_reset.columns
+        statement = "These are the columns of my dataset:"
+        final_text = "\n".join([statement] + list(data_columns))
 
-    prompt = f"The dataframe is a parquet dataframe named {data_file.name}.\
-    {final_text}, write a python code to {user_input}\
-    The column timestamp are similar for the groups in the symbol column so comparison should be made based on the timestamp\
-    I have this code already\
-    data = pd.read_parquet('{data_file.name}')\
-    df_reset = data.reset_index()\
-    change_index = df_reset['symbol'].ne(df_reset['symbol'].shift())\
-    df_reset['symbol'] = df_reset['symbol'].ffill()\
-    The only categorical column is 'symbol' which has all the stock names\
-    Please note, when you are asked to do computation using two or more 'symbol' column values, create a subset dataframe for each on join on the timestamp column.\
-    please note, just return the code block and do not add any text explaining the code"
+        prompt = f"The dataframe is a parquet dataframe named {data_file.name}.\
+        {final_text}, write a python code to {user_input}\
+        The column timestamp are similar for the groups in the symbol column so comparison should be made based on the timestamp\
+        I have this code already\
+        data = pd.read_parquet('{data_file.name}')\
+        df_reset = data.reset_index()\
+        change_index = df_reset['symbol'].ne(df_reset['symbol'].shift())\
+        df_reset['symbol'] = df_reset['symbol'].ffill()\
+        The only categorical column is 'symbol' which has all the stock names\
+        Please note, when you are asked to do computation using two or more 'symbol' column values, create a subset dataframe for each on join on the timestamp column.\
+        please note, just return the code block and do not add any text explaining the code"
 
-    # Run the code and get the output
-    system_message = "This is a stock market data\
-    Write an executable python code\
-    please note, just return the code block and do not add any text explaining the code."
+        # Run the code and get the output
+        system_message = "This is a stock market data\
+        Write an executable python code\
+        please note, just return the code block and do not add any text explaining the code."
 
-    response = llm_gpt4(prompt, system_message, delimiter="####", print_response=True, retries=3, sleep_time=10)
-    response_without_code_blocks = response.replace('```python', '').replace('```', '')
+        response = llm_gpt4(prompt, system_message, delimiter="####", print_response=True, retries=3, sleep_time=10)
+        response_without_code_blocks = response.replace('```python', '').replace('```', '')
 
-    # Display the output based on its type
-    output = run_code_and_get_output(response_without_code_blocks)
+        # Display the output based on its type
+        output = run_code_and_get_output(response_without_code_blocks)
 
     current_directory = os.getcwd()
 
