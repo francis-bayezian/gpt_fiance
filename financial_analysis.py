@@ -117,6 +117,7 @@ if data_file is not None:
     {final_text}, write a python code to {user_input}\
     The column timestamp are similar for the groups in the symbol column so comparison should be made based on the timestamp\
     I have this code already\
+    import sys\
     sys.path.append('.')\
     from parent_dir.folder import module\
     data = pd.read_parquet('{data_file.name}')\
