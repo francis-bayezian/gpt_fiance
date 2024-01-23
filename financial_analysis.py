@@ -88,7 +88,8 @@ def run_code_and_get_output(script_content):
         file.write(script_content)
 
     try:
-        script_output = subprocess.check_output(['python', script_filename], universal_newlines=True)
+        script_output = subprocess.run([f"{sys.executable}", script_filename])
+        #subprocess.check_output(['python', script_filename], universal_newlines=True)
         return script_output
     except subprocess.CalledProcessError as e:
         return f"Error running the script:\n{e}"
