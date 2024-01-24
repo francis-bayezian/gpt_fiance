@@ -121,6 +121,7 @@ if data_file is not None:
         prompt = f"The dataframe is a parquet dataframe named {data_file.name}.\
         {final_text}, write a python code to {user_input}\
         The column timestamp are similar for the groups in the symbol column so comparison should be made based on the timestamp\
+        Import all the needed libraries
         I have this code already\
         data = pd.read_parquet('{data_file.name}')\
         df_reset = data.reset_index()\
